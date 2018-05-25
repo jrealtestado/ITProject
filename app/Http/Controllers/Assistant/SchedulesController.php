@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Patient;
 use App\Service;
 use App\Dentist;
+use App\Teeth;
 
 class SchedulesController extends Controller
 {
@@ -41,9 +42,11 @@ class SchedulesController extends Controller
         $services = Service::all();
         $dentists = Dentist::all();
         $patients = Patient::all();
+        $teeth = Teeth::all();
         return view('Assistant.schedules.create')
         ->with('services', $services)
         ->with('dentists', $dentists)
+        ->with('teeth', $teeth)
         ->with('patients', $patients);
         
     }
@@ -64,8 +67,12 @@ class SchedulesController extends Controller
             'opStatus',
             'dentID',
             'servID',
-            'patID'
-		]);
+            'teethID',
+            'patID',
+            'teethID'
+            
+        ]);
+        
         $requestData = $request->all();
         Schedule::create($requestData);
 
@@ -110,9 +117,13 @@ class SchedulesController extends Controller
     {
         $services = Service::all();
         $dentists = Dentist::all();
+        $patients = Patient::all();
+        $teeth = Teeth::all();
         $schedule = Schedule::find($schedId);
         return view('Assistant.schedules.schedule', compact('schedule'))
         ->with('services',$services)
+        ->with('teeth', $teeth)
+        ->with('patients', $patients)
         ->with('dentists',$dentists);
     }
 
@@ -133,9 +144,11 @@ class SchedulesController extends Controller
             'opStatus',
             'dentID',
             'servID',
-            'patID'
+            'patID',
+            'teethID'
 		]);
         $requestData = $request->all();
+        
         $schedule = Schedule::findOrFail($schedId);
         // $schedule->timeTo = 
         // $schedule->timeFrom =

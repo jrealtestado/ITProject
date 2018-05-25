@@ -41,10 +41,10 @@
                                 {{Form::label('timeTo', 'Time To')}}
                                 {{Form::time('timeTo', $schedule->timeTo, ['class' => 'form-control', 'placeholder' => 'First name followed by Last Name'])}}
                             </div>
-                            {{-- <div class="form-group" {{ $errors->has('opStatus') ? 'has-error' : ''}}>
+                            <div class="form-group" {{ $errors->has('opStatus') ? 'has-error' : ''}}>
                                 {{Form::label('opStatus', 'Operation Status')}}
                                 {{Form::text('opStatus', $schedule->opStatus, ['class' => 'form-control'])}}
-                            </div> --}}
+                            </div>
                             <div class="form-group" {{ $errors->has('servID') ? 'has-error' : ''}}>
                                 {{Form::label('servID', 'Service')}}
                                 <select name="servID" class="form-control">
@@ -69,8 +69,13 @@
                         <a href="{{ url('/assistant/schedules') }}" title="Back"><button class="btn btn-warning"> Cancel</button></a>
                         {{Form::submit('Submit', ['class'=>'btn btn-primary pull-right']) }}
 
-                    </div>
-                    {!! Form::close() !!}   
+                    {!! Form::close() !!}
+
+                    {!! Form::open(['action' => ['Assistant\SchedulesController@destroy', $schedule->schedId], 'method' => 'post', 'class' => 'pull-right' ]) !!}
+                        {{Form::hidden('_method', 'DELETE')}}
+                        {{Form::submit('Mark as Done', ['class'=>'btn btn-success pull-right']) }}
+                    {!! Form::close() !!}
+                    </div>   
                 </div>
             </div>
         </div>

@@ -57,15 +57,28 @@
                                             <option value="{{$service->servID}}">{{$service->servName}}</option>
                                         @endforeach
                                 </select>
-                            </div> 
+                            </div>
+                            <div class="form-group">
+                                {{Form::label('price', 'Price of Services')}}
+                                <input name ="price" class="form-control" value="{{$service->price}}"/>
+                            </div>
+                            
                             <div class="form-group" {{ $errors->has('dentID') ? 'has-error' : ''}}> 
                                 {{Form::label('dentID', 'Dentist')}}                              
-                                 <select name="dentID" class="form-control">
+                                 <select type="hidden" name="dentID" class="form-control">
                                     @foreach($dentists as $dentist)
                                         <option value="{{$dentist->dentID}}">{{$dentist->name}}</option>
                                     @endforeach
                                 </select> 
                             </div>
+
+                            <div class="form-group" {{ $errors->has('teethID') ? 'has-error' : ''}}> 
+                                {{Form::label('teethID', '  ')}}
+                                @foreach($teeth as $tooth)                              
+                                    <input type="hidden" name="teethID" value="{{$tooth->teethID}}"></input>
+                                @endforeach
+                            </div> 
+
                             {{Form::submit('Submit', ['class'=>'btn btn-primary pull-right']) }}
                         {!! Form::close() !!}                        
                         <a href="{{ url('/assistant/schedules') }}" title="Back"><button class="btn btn-warning"> Cancel</button></a>
