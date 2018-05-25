@@ -40,8 +40,7 @@
                             {{Form::label('payment', 'Payment')}}
                             {{Form::text('payment', '', ['class' => 'form-control', 'placeholder' => 'Payment Amount'])}}
                         </div>
-                        
-                        
+
                     {!! Form::close() !!}
                     </div>
                                            
@@ -52,6 +51,8 @@
                     {{Form::hidden('_method', 'DELETE')}}
                     {{Form::submit('Mark as Done', ['class'=>'btn btn-success pull-right']) }}
                 {!! Form::close() !!}
+                
+                
                     </div>  
                 
                     </div>
