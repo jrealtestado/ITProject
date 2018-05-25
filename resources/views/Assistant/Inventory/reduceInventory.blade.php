@@ -9,18 +9,19 @@
             <ol class="breadcrumb">
                 <li><a href="{{ url('/assistant') }}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class=""><a href="{{ url('/assistant/inventory') }}">Inventory</a></li>
-                <li class="active">Add Item</li>
+                <li class="active">Deduct Item</li>
             </ol>
         </section>
         <div class="well">
-            {!! Form::open(['action' => ['Assistant\\InventoryController@added', $inventory->invID], 'method' => 'POST']) !!}
+            {!! Form::open(['action' => ['Assistant\\InventoryController@reduce', $inventory->invID], 'method' => 'POST']) !!}
+            
             <div class="form-group">
                 {{Form::label('invName', 'Name')}}
                 {{Form::text('invName', $inventory->invName, ['class' => 'form-control', 'placeholder' => 'Inventory Name', 'readonly'])}}
             </div>
             <div class="form-group">
-                {{Form::label('additional', 'Additional')}}
-                {{Form::number('additional', '', ['class' => 'form-control', 'placeholder' => 'Additional Quantity'])}}
+                {{Form::label('deduction', 'Amount')}}
+                {{Form::number('deduction', '', ['class' => 'form-control', 'placeholder' => 'Deduction'])}}
             </div>
             <div class="form-group">
                 {{Form::hidden('quantity', 'Quantity')}}

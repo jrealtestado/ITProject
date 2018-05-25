@@ -11,7 +11,9 @@
 	<li class="active">Inventory</li>
 	</ol>
 	<hr>
-	<a class="btn btn-primary" href="{{ url('/assistant/inventory/create') }}" data-modal-id="modal-register">Create new Inventory Item</a>
+	<a class="btn btn-success" href="{{ url('/assistant/inventory/create') }}"><i class="fa fa-plus"></i> Create new Inventory Item</a>
+	<a class="btn btn-primary" href="{{ url('newStocks') }}"><i class="fa fa-truck"></i> Delivery</a>
+	<a class="btn btn-danger" href="{{ url('/assistant/inventory/') }}"><i class="fa fa-minus"></i> Usage</a>
 </section>
 
 
@@ -29,27 +31,25 @@
 				<th>Quantity</th>
 				<th>Unit</th>
 				<th>Inventory Status</th>
-				<th>Status</th>
-				<th style="width: 30%">Options</th>
+				<th style="width: 40%">Options</th>
 			</tr>
 			</thead>
 			<tbody>
-				@if(count($inventory) > 1)
+				@if(count($inventory) > 0)
 				@foreach($inventory as $item)
 				<tr>
 					<td>{{$item->invName}}</td>
 					<td>{{$item->quantity}}</td>
 					<td>{{$item->unit}}</td>
 					<td>{{$item->invStatus}}</td>
-					<td>{{$item->status}}</td>
 					<td>
-						<a href="{{ url('assistant/inventory/' . $item->invID . '/add') }}" title="Add Inventory"><button class="btn btn-info"><i class="fa fa-plus" aria-hidden="true"></i>  Add</button></a>
-						<a href="{{ url('assistant/inventory/' . $item->invID) }}" title="View Inventory"><button class="btn btn-info "><i class="fa fa-eye" aria-hidden="true"></i>  View</button></a>
-						<a href="{{ url('assistant/inventory/' . $item->invID . '/edit') }}" title="Edit Inventory"><button class="btn btn-primary"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
-						{!! Form::open(['action' => ['Assistant\InventoryController@destroy', $item->invID], 'method' => 'POST']) !!}
-							{{Form::hidden('_method', 'DELETE')}}
-							<button class="btn btn-danger pull-right" type="submit" style="margin: 2px"><i class="fa fa-trash"></i> Deactivate</button>
-						{!! Form::close() !!}					
+						<a href="{{ url('assistant/inventory/' . $item->invID . '/add') }}" title="View Schedule"><button class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i>  Add</button></a>
+						<a href="{{ url('assistant/inventory/' . $item->invID) }}" title="View Schedule"><button class="btn btn-info "><i class="fa fa-eye" aria-hidden="true"></i>  View</button></a>
+						<a href="{{ url('assistant/inventory/' . $item->invID . '/minus') }}" title="Edit Schedule"><button class="btn btn-primary"><i class="fa fa-minus" aria-hidden="true"></i> Usage</button></a>					
+						{!! Form::open(['action' => ['Assistant\InventoryController@destroy', $item->invID], 'method' => 'POST', 'style' => 'display:inline']) !!}
+							{{Form::hidden('_method', 'DELETE')}}			
+							<button class="btn btn-danger" type="submit" style="margin: 2px, display:inline"><i class="fa fa-trash"></i> Deactivate</button>
+						{!! Form::close() !!}
 					</td>
 				</tr>
 				@endforeach
@@ -63,7 +63,6 @@
 				<th>Quantity</th>
 				<th>Unit</th>
 				<th>Inventory Status</th>
-				<th>Status</th>
 				<th>Options</th>
 			</tr>
 			</tfoot>

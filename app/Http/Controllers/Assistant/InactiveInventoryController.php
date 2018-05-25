@@ -85,7 +85,9 @@ class InactiveInventoryController extends Controller
         $item = Inventory::find($id);
         $item->status = "Active";
         $item->save();
-
-        return redirect('assistant/inactiveInventory')->with('success', 'Inventory Information Updated');
+        $inventoryList = Inventory::all()->where('status', 'Inactive');
+        return redirect('assistant/inactiveInventory')
+            ->with('inventory', $inventoryList)
+            ->with('success', 'Inventory Information Updated');
     }
 }

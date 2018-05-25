@@ -7,6 +7,7 @@ use App\Http\Requests;
 
 use Illuminate\Http\Request;
 use App\Inventory;
+use App\Stock;
 
 class InventoryController extends Controller
 {
@@ -77,7 +78,11 @@ class InventoryController extends Controller
     public function show($invID)
     {
        $inventory = Inventory::find($invID);
-       return view('Assistant.Inventory.showInventory')->with('inventory', $inventory); 
+       $items = Stock::all()->where('invID', $invID);
+
+       return view('Assistant.Inventory.showInventory')
+            ->with('inventory', $inventory)
+            ->with('items', $items); 
     }
 
     /**
@@ -92,13 +97,6 @@ class InventoryController extends Controller
         return view('Assistant.Inventory.editInventory')->with('inventory', $inventory);
     }
 
-    public function add($invID)
-    {
-        $inventory = Inventory::find($invID);
-        return view('Assistant.Inventory.addInventory')->with('inventory', $inventory);
-    }
-
-    
     /**
      * Update the specified resource in storage.
      *
@@ -106,7 +104,56 @@ class InventoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    
     public function update(Request $request, $invID)
+    {
+        $this->validate($request, [
+            'invName' => 'required',
+            'quantity' => 'required',
+            'additional',
+            'low_stock_quantity',
+            'unit' => 'required'
+        ]);
+        
+        $inventory = Inventory::find($invID);
+        $inventory->invName = $request->input('invName');
+        $inventory->quantity = $request->input('quantity');
+        $inventory->low_stock_quantity = $request->input('low_stock_quantity');
+        $inventory->unit = $request->input('unit');
+
+        if($inventory->quantity == 0){
+            $inventory->invStatus = "Out of Stock";            
+        }
+        else if($inventory->quantity >= $inventory->low_stock_quantity){
+            $inventory->invStatus = "Good";
+        }
+        else if($inventory->quantity <= $inventory->low_stock_quantity){
+            $inventory->invStatus = "Low in Stock";
+        }
+
+        $inventory->save();
+
+        // $stock = new Stock;
+        // $stock->invID = $invID;
+        // $stock->patID = 0;
+        // $stock->quantity = $additional;
+        // $stock->historyStatus = 'Added';
+
+        // $stock->save();
+
+        $inventoryList = Inventory::all()->where('status', 'Active');
+        return redirect('assistant/inventory')
+            ->with('inventory', $inventoryList)
+            ->with('success', 'Inventory Information Updated');
+    }
+
+    public function add($invID)
+    {
+        $inventory = Inventory::find($invID);
+        return view('Assistant.Inventory.addInventory')->with('inventory', $inventory);
+    }
+    
+    public function added(Request $request, $invID)
     {
         $this->validate($request, [
             'invName' => 'required',
@@ -136,8 +183,68 @@ class InventoryController extends Controller
 
         $inventory->save();
 
-        return redirect('assistant/inventory')->with('success', 'Inventory item information updated');
+        $stock = new Stock;
+        $stock->invID = $invID;
+        $stock->patID = 0;
+        $stock->quantity = $additional;
+        $stock->historyStatus = 'Added';
 
+        $stock->save();
+
+        $inventoryList = Inventory::all()->where('status', 'Active');
+        return redirect('assistant/inventory')
+            ->with('inventory', $inventoryList)
+            ->with('success', 'Inventory Information Updated');
+    }
+
+    public function minus($invID)
+    {
+        $inventory = Inventory::find($invID);
+        return view('Assistant.Inventory.reduceInventory')->with('inventory', $inventory);
+    }
+
+    public function reduce(Request $request, $invID)
+    {
+        $this->validate($request, [
+            'invName' => 'required',
+            'quantity' => 'required',
+            'additional',
+            'low_stock_quantity',
+            'unit' => 'required'
+        ]);
+        
+        $inventory = Inventory::find($invID);
+        $inventory->invName = $request->input('invName');
+        $deduction = $request->input('deduction');
+        $inventory->quantity = $request->input('quantity');
+        $inventory->low_stock_quantity = $request->input('low_stock_quantity');
+        $inventory->unit = $request->input('unit');
+        $inventory->quantity = $inventory->quantity - $deduction;
+
+        if($inventory->quantity == 0){
+            $inventory->invStatus = "Out of Stock";            
+        }
+        else if($inventory->quantity >= $inventory->low_stock_quantity){
+            $inventory->invStatus = "Good";
+        }
+        else if($inventory->quantity <= $inventory->low_stock_quantity){
+            $inventory->invStatus = "Low in Stock";
+        }
+
+        $inventory->save();
+
+        $stock = new Stock;
+        $stock->invID = $invID;
+        $stock->patID = 0;
+        $stock->quantity = $deduction;
+        $stock->historyStatus = 'Reduced';
+
+        $stock->save();
+
+        $inventoryList = Inventory::all()->where('status', 'Active');
+        return redirect('assistant/inventory')
+            ->with('inventory', $inventoryList)
+            ->with('success', 'Inventory Information Updated');
     }
 
     /**
@@ -152,6 +259,9 @@ class InventoryController extends Controller
         $inventory->status = "Inactive";
         $inventory->save();
 
-        return redirect('assistant/inventory')->with('success', 'Inventory Information Updated');
+        $inventoryList = Inventory::all()->where('status', 'Active');
+        return redirect('assistant/inventory')
+            ->with('inventory', $inventoryList)
+            ->with('success', 'Inventory Information Updated');
     }
 }
