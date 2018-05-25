@@ -34,7 +34,13 @@ Auth::routes();
     
     
     Route::get('assistant/inventory/{invID}/add', 'Assistant\\InventoryController@add');
+    Route::get('assistant/inventory/{invID}/minus', 'Assistant\\InventoryController@minus');
+    Route::put('assistant/inventory/{invID}/added', 'Assistant\\InventoryController@added');
+    Route::put('assistant/inventory/{invID}/reduce', 'Assistant\\InventoryController@reduce');
     Route::resource('assistant/inventory', 'Assistant\\InventoryController');
+    Route::get('newStocks', function(){
+        return view ('assistant/Inventory/newStocks');   
+    });
     
     Route::resource('assistant/patient', 'Assistant\\PatientsController');
     Route::resource('assistant/inactiveInventory', 'Assistant\\InactiveInventoryController');
