@@ -15,8 +15,6 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-body">
-                    
-
                         @if ($errors->any())
                             <ul class="alert alert-danger">
                                 @foreach ($errors->all() as $error)
@@ -77,8 +75,8 @@
                                 @foreach($teeth as $tooth)                              
                                     <input type="hidden" name="teethID" value="{{$tooth->teethID}}"></input>
                                 @endforeach
-                            </div> 
-
+                            </div>
+                              
                             {{Form::submit('Submit', ['class'=>'btn btn-primary pull-right']) }}
                         {!! Form::close() !!}                        
                         <a href="{{ url('/assistant/schedules') }}" title="Back"><button class="btn btn-warning"> Cancel</button></a>

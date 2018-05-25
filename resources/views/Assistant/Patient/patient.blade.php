@@ -27,7 +27,6 @@
                                         <th>Contact No.</th>
                                         <th>Age</th>
                                         <th>Sex</th>
-                                        <th>Patient Status</th>
                                         <th style ="width: 25%"><center>Options</center></th>
                                     </tr>
                                 </thead>
@@ -42,11 +41,13 @@
                                                 <td>{{$patient->patientTelNo}}</td>
                                                 <td>{{$patient->age}}</td>
                                                 <td>{{$patient->sex}}</td>
-                                                <td>{{$patient->patStatus}}</td>
                                                 <td>
-                                                    {!! Form::open(['action' => ['Assistant\PatientsController@destroy', $patient->patID], 'method' => 'POST']) !!}
+                                                    
+                                                        <a href="{{ url('/assistant/patient' . '/' . $patient->patID) }}" class="btn btn-primary" style="margin: 2px"><i class="fa fa-folder"></i> Profile</a>
+                                                    <button class="btn btn-info" style="margin: 2px" data-toggle="modal" data-target="#modalCart{{$counter}}" ><i class="fa fa-pencil" ></i>History</button>
+                                                    {!! Form::open(['action' => ['Assistant\PatientsController@destroy', $patient->patID], 'method' => 'POST', 'style' => 'display:inline']) !!}
                                                         {{Form::hidden('_method', 'DELETE')}}
-                                                        <button class="btn btn-danger pull-right" type="submit" style="margin: 2px"><i class="fa fa-trash"></i> Deactivate</button>
+                                                        <button class="btn btn-danger" type="submit" style="margin: 2px"><i class="fa fa-trash"></i> Deactivate</button>
                                                     {!! Form::close() !!}
                                                     <div class="modal fade" id="modalCart{{$counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
@@ -116,8 +117,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <button class="btn btn-info pull-right" style="margin: 2px" data-toggle="modal" data-target="#modalCart{{$counter}}" ><i class="fa fa-pencil" ></i>History</button>
-                                                    <a href="{{ url('/assistant/patient' . '/' . $patient->patID) }}" class="btn btn-primary pull-right" style="margin: 2px"><i class="fa fa-folder"></i> Profile</a>
                                                 </td>
                                             </tr>
                                         @endforeach

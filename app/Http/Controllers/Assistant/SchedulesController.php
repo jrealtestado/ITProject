@@ -43,10 +43,12 @@ class SchedulesController extends Controller
         $dentists = Dentist::all();
         $patients = Patient::all();
         $teeth = Teeth::all();
+
         return view('Assistant.schedules.create')
         ->with('services', $services)
         ->with('dentists', $dentists)
         ->with('teeth', $teeth)
+        // ->with('balance', $balance)
         ->with('patients', $patients);
         
     }
@@ -75,7 +77,8 @@ class SchedulesController extends Controller
         
         $requestData = $request->all();
         Schedule::create($requestData);
-
+        
+        // dd($requestData);
         return redirect('assistant/schedules')->with('flash_message', 'Schedule added!');
     }
 
@@ -150,12 +153,30 @@ class SchedulesController extends Controller
         $requestData = $request->all();
         
         $schedule = Schedule::findOrFail($schedId);
+        $patID = $schedule->patient->patID;
+        $patients = Patient::find($patID);
+
+        // $paymentID = $schedule->payment->paymentID;
+        // $payments = Payment::find($paymentID);
+        
+
+        $balance = $patients->balance;
+        $servPrice = $schedule->service->price;
+        $payment = $request->input('payment');
+        $total = $servPrice - $payment;
+        $newBalance = $total + $balance;
+   
+
+
+        $patients->balance = $newBalance;
+        $patients->save();
+
         // $schedule->timeTo = 
         // $schedule->timeFrom =
         // $schedule->servID = 
         $schedule->update($requestData);
 
-        // dd($requestData);
+        // dd($payment);
 
         return redirect('assistant/schedules')->with('flash_message', 'Schedule updated!');
     }

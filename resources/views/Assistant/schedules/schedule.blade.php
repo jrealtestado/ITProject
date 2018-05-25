@@ -60,7 +60,6 @@
                         <div class="form-group">
                             {{Form::label('payment', 'Payment')}}
                             {{Form::text('payment', '', ['class' => 'form-control', 'placeholder' => 'Payment Amount'])}}
-                            <input type="hidden" name="balance" value="">
                         </div>
                         {{Form::hidden('_method', 'PATCH')}}
 

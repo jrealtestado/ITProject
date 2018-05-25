@@ -25,7 +25,7 @@ class Schedule extends Model
      *
      * @var array
      */
-    protected $fillable = ['date', 'timeFrom', 'timeTo','opStatus','patID','dentID','servID'];
+    protected $fillable = ['date', 'timeFrom', 'timeTo','opStatus','patID','dentID','servID', 'teethID'];
 
     public function patient()
     {
